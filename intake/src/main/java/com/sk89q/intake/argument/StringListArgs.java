@@ -29,11 +29,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 class StringListArgs extends AbstractCommandArgs {
 
     private final List<String> arguments;
-    private final Map<Character, String> flags;
+    private final Map<String, String> flags;
     private final Namespace namespace;
     private int position = 0;
 
-    StringListArgs(List<String> arguments, Map<Character, String> flags, Namespace namespace) {
+    StringListArgs(List<String> arguments, Map<String, String> flags, Namespace namespace) {
         checkNotNull(arguments, "arguments");
         checkNotNull(flags, "flags");
         checkNotNull(namespace, "namespace");
@@ -85,7 +85,7 @@ class StringListArgs extends AbstractCommandArgs {
     }
 
     @Override
-    public Map<Character, String> getFlags() {
+    public Map<String, String> getFlags() {
         return flags;
     }
 

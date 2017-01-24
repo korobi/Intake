@@ -139,7 +139,7 @@ public interface CommandArgs {
      *
      * @return The map of flags
      */
-    Map<Character, String> getFlags();
+    Map<String, String> getFlags();
 
     /**
      * Get the map of provided values.

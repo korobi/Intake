@@ -71,7 +71,7 @@ public class CommandContextTest {
 
     @Test
     public void testValueFlagParsing() throws Exception {
-        CommandContext context = new CommandContext("cmd -ac alpha -v value bravo -d", ImmutableSet.of('v'));
+        CommandContext context = new CommandContext("cmd -ac alpha -v value bravo -d", ImmutableSet.of("v"));
         assertThat(context.getCommand(), is("cmd"));
         assertThat(context.getString(0), equalTo("alpha"));
         assertThat(context.getString(1), equalTo("bravo"));

@@ -46,7 +46,7 @@ public abstract class OptionType {
      * @see #isValueFlag()
      */
     @Nullable
-    public abstract Character getFlag();
+    public abstract String[] getFlag();
 
     /**
      * Return whether the flag is a value flag.
@@ -100,7 +100,7 @@ public abstract class OptionType {
      * @param flag The flag character
      * @return An option type
      */
-    public static OptionType flag(Character flag) {
+    public static OptionType flag(String[] flag) {
         checkNotNull(flag, "flag");
         return new BooleanFlag(flag);
     }
@@ -111,7 +111,7 @@ public abstract class OptionType {
      * @param flag The flag character
      * @return An option type
      */
-    public static OptionType valueFlag(Character flag) {
+    public static OptionType valueFlag(String[] flag) {
         checkNotNull(flag, "flag");
         return new ValueFlag(flag);
     }
@@ -119,7 +119,7 @@ public abstract class OptionType {
     private static final class RequiredPositional extends OptionType {
         @Nullable
         @Override
-        public Character getFlag() {
+        public String[] getFlag() {
             return null;
         }
 
@@ -142,7 +142,7 @@ public abstract class OptionType {
     private static final class OptionalPositional extends OptionType {
         @Nullable
         @Override
-        public Character getFlag() {
+        public String[] getFlag() {
             return null;
         }
 
@@ -163,15 +163,15 @@ public abstract class OptionType {
     }
 
     private static final class BooleanFlag extends OptionType {
-        private final Character flag;
+        private final String[] flag;
 
-        private BooleanFlag(Character flag) {
+        private BooleanFlag(String[] flag) {
             this.flag = flag;
         }
 
         @Nullable
         @Override
-        public Character getFlag() {
+        public String[] getFlag() {
             return flag;
         }
 
@@ -193,15 +193,15 @@ public abstract class OptionType {
     }
 
     private static final class ValueFlag extends OptionType {
-        private final Character flag;
+        private final String[] flag;
 
-        private ValueFlag(Character flag) {
+        private ValueFlag(String[] flag) {
             this.flag = flag;
         }
 
         @Nullable
         @Override
-        public Character getFlag() {
+        public String[] getFlag() {
             return flag;
         }
 

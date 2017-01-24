@@ -51,7 +51,7 @@ public final class Arguments {
      * @return The arguments
      */
     public static CommandArgs copyOf(List<String> arguments) {
-        return new StringListArgs(arguments, ImmutableMap.<Character, String>of(), new Namespace());
+        return new StringListArgs(arguments, ImmutableMap.<String, String>of(), new Namespace());
     }
 
     /**
@@ -72,7 +72,7 @@ public final class Arguments {
      * @param flags A map of flags, where the key is the flag and the value may be null
      * @return The arguments
      */
-    public static CommandArgs copyOf(List<String> arguments, Map<Character, String> flags) {
+    public static CommandArgs copyOf(List<String> arguments, Map<String, String> flags) {
         return new StringListArgs(arguments, flags, new Namespace());
     }
 
@@ -84,7 +84,7 @@ public final class Arguments {
      * @param namespace The associated namespace
      * @return The arguments
      */
-    public static CommandArgs copyOf(List<String> arguments, Map<Character, String> flags, Namespace namespace) {
+    public static CommandArgs copyOf(List<String> arguments, Map<String, String> flags, Namespace namespace) {
         return new StringListArgs(arguments, flags, namespace);
     }
 

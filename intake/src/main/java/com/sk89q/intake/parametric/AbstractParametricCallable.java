@@ -58,7 +58,7 @@ public abstract class AbstractParametricCallable implements CommandCallable {
 
     private List<? extends Annotation> commandAnnotations = Collections.emptyList();
     private boolean ignoreUnusedFlags = false;
-    private Set<Character> unusedFlags = Collections.emptySet();
+    private Set<String> unusedFlags = Collections.emptySet();
 
     /**
      * Create a new instance.
@@ -139,7 +139,7 @@ public abstract class AbstractParametricCallable implements CommandCallable {
      *
      * @return List of flags that can be unconsumed
      */
-    protected Set<Character> getUnusedFlags() {
+    protected Set<String> getUnusedFlags() {
         return unusedFlags;
     }
 
@@ -150,7 +150,7 @@ public abstract class AbstractParametricCallable implements CommandCallable {
      *
      * @param unusedFlags List of flags that can be unconsumed
      */
-    protected void setUnusedFlags(Set<Character> unusedFlags) {
+    protected void setUnusedFlags(Set<String> unusedFlags) {
         this.unusedFlags = ImmutableSet.copyOf(unusedFlags);
     }
 

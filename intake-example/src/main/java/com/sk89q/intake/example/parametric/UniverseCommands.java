@@ -45,7 +45,7 @@ public class UniverseCommands {
 
     @Command(aliases = "settemp", desc = "Set the mean temperature of an object")
     @Require("body.settemp")
-    public void setTemp(Body body, double meanTemp, @Switch('f') boolean inFahrenheit) {
+    public void setTemp(Body body, double meanTemp, @Switch("-f") boolean inFahrenheit) {
         if (inFahrenheit) {
             meanTemp = fahrenheitToCelsius(meanTemp);
         }
@@ -62,7 +62,7 @@ public class UniverseCommands {
 
     @Command(aliases = "info", desc = "Show information about an object")
     @Require("body.info")
-    public void info(Body body, @Switch('f') boolean inFahrenheit) {
+    public void info(Body body, @Switch({"-f", "--fahrenheit"}) boolean inFahrenheit) {
         System.out.println("type: " + body.getType());
         if (inFahrenheit) {
             System.out.println("mean temp: " + celsiusToFahrenheit(body.getMeanTemperature()) + " deg F");

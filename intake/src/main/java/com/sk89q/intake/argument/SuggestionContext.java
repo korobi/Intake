@@ -24,10 +24,10 @@ public class SuggestionContext {
     private static final SuggestionContext FOR_LAST = new SuggestionContext(null, true);
     private static final SuggestionContext FOR_HANGING = new SuggestionContext(null, false);
     
-    private final Character flag;
+    private final String flag;
     private final boolean forLast;
 
-    private SuggestionContext(Character flag, boolean forLast) {
+    private SuggestionContext(String flag, boolean forLast) {
         this.flag = flag;
         this.forLast = forLast; 
     }
@@ -44,7 +44,7 @@ public class SuggestionContext {
         return flag != null;
     }
 
-    public Character getFlag() {
+    public String getFlag() {
         return flag;
     }
     
@@ -53,7 +53,7 @@ public class SuggestionContext {
         return forFlag() ? ("-" + getFlag()) : (forHangingValue() ? "hanging" : "last");
     }
     
-    public static SuggestionContext flag(Character flag) {
+    public static SuggestionContext flag(String flag) {
         return new SuggestionContext(flag, false);
     }
     

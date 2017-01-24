@@ -75,7 +75,7 @@ class ContextArgs extends AbstractCommandArgs {
     }
 
     @Override
-    public Map<Character, String> getFlags() {
+    public Map<String, String> getFlags() {
         return context.getFlagsMap();
     }
 

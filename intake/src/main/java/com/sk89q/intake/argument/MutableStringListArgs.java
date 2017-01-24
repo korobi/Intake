@@ -24,7 +24,7 @@ import java.util.Map;
 
 public class MutableStringListArgs extends StringListArgs {
 
-    public MutableStringListArgs(List<String> arguments, Map<Character, String> flags, Namespace namespace) {
+    public MutableStringListArgs(List<String> arguments, Map<String, String> flags, Namespace namespace) {
         super(arguments, flags, namespace);
     }
 

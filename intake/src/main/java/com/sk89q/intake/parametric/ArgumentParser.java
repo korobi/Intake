@@ -48,9 +48,9 @@ public final class ArgumentParser {
 
     private final List<ParameterEntry> parameters;
     private final List<Parameter> userParams;
-    private final Set<Character> valueFlags;
+    private final Set<String> valueFlags;
 
-    private ArgumentParser(List<ParameterEntry> parameters, List<Parameter> userParams, Set<Character> valueFlags) {
+    private ArgumentParser(List<ParameterEntry> parameters, List<Parameter> userParams, Set<String> valueFlags) {
         this.parameters = ImmutableList.copyOf(parameters);
         this.userParams = ImmutableList.copyOf(userParams);
         this.valueFlags = ImmutableSet.copyOf(valueFlags);
@@ -70,7 +70,7 @@ public final class ArgumentParser {
      *
      * @return A list of value flags
      */
-    public Set<Character> getValueFlags() {
+    public Set<String> getValueFlags() {
         return valueFlags;
     }
 
@@ -83,7 +83,7 @@ public final class ArgumentParser {
      * @throws ProvisionException If there is a problem with the binding itself
      */
     public Object[] parseArguments(CommandArgs args) throws ArgumentException, ProvisionException {
-        return parseArguments(args, false, Collections.<Character>emptySet());
+        return parseArguments(args, false, Collections.<String>emptySet());
     }
 
     /**
@@ -96,7 +96,7 @@ public final class ArgumentParser {
      * @throws ArgumentException If there is a problem with the provided arguments
      * @throws ProvisionException If there is a problem with the binding itself
      */
-    public Object[] parseArguments(CommandArgs args, boolean ignoreUnusedFlags, Set<Character> unusedFlags) throws ArgumentException, ProvisionException {
+    public Object[] parseArguments(CommandArgs args, boolean ignoreUnusedFlags, Set<String> unusedFlags) throws ArgumentException, ProvisionException {
         Object[] parsedObjects = new Object[parameters.size()];
 
         for (int i = 0; i < parameters.size(); i++) {
@@ -142,13 +142,13 @@ public final class ArgumentParser {
         }
     }
 
-    private void checkUnconsumed(CommandArgs arguments, boolean ignoreUnusedFlags, Set<Character> unusedFlags) throws UnusedArgumentException {
+    private void checkUnconsumed(CommandArgs arguments, boolean ignoreUnusedFlags, Set<String> unusedFlags) throws UnusedArgumentException {
         List<String> unconsumedArguments = Lists.newArrayList();
 
         if (!ignoreUnusedFlags) {
-            Set<Character> unconsumedFlags = null;
+            Set<String> unconsumedFlags = null;
 
-            for (char flag : arguments.getFlags().keySet()) {
+            for (String flag : arguments.getFlags().keySet()) {
                 boolean found = false;
 
                 if (unusedFlags.contains(flag)) {
@@ -156,24 +156,28 @@ public final class ArgumentParser {
                 }
 
                 for (ParameterEntry parameter : parameters) {
-                    Character paramFlag = parameter.getParameter().getOptionType().getFlag();
-                    if (paramFlag != null && flag == paramFlag) {
-                        found = true;
-                        break;
+                    String[] paramFlags = parameter.getParameter().getOptionType().getFlag();
+                    if (paramFlags != null) {
+                        for(String paramFlag : paramFlags) {
+                            if(flag.equals(paramFlag)) {
+                                found = true;
+                                break;
+                            }
+                        }
                     }
                 }
 
                 if (!found) {
                     if (unconsumedFlags == null) {
-                        unconsumedFlags = new HashSet<Character>();
+                        unconsumedFlags = new HashSet<String>();
                     }
                     unconsumedFlags.add(flag);
                 }
             }
 
             if (unconsumedFlags != null) {
-                for (Character flag : unconsumedFlags) {
-                    unconsumedArguments.add("-" + flag);
+                for (String flag : unconsumedFlags) {
+                    unconsumedArguments.add(flag);
                 }
             }
         }
@@ -198,7 +202,7 @@ public final class ArgumentParser {
         private final Injector injector;
         private final List<ParameterEntry> parameters = Lists.newArrayList();
         private final List<Parameter> userProvidedParameters = Lists.newArrayList();
-        private final Set<Character> valueFlags = Sets.newHashSet();
+        private final Set<String> valueFlags = Sets.newHashSet();
         private boolean seenOptionalParameter = false;
 
         /**
@@ -291,7 +295,7 @@ public final class ArgumentParser {
             ParameterEntry entry = new ParameterEntry(parameter, key, binding, modifiers);
 
             if (optionType.isValueFlag()) {
-                valueFlags.add(optionType.getFlag());
+                Collections.addAll(valueFlags, optionType.getFlag());
             }
 
             if (!binding.getProvider().isProvided()) {

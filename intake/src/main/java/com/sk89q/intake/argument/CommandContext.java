@@ -32,9 +32,9 @@ public class CommandContext {
     private final List<String> parsedArgs;
     private final List<Integer> originalArgIndices;
     private final String[] originalArgs;
-    private final Set<Character> booleanFlags;
-    private final Map<Character, String> valueFlags;
-    private final Map<Character, String> allFlags;
+    private final Set<String> booleanFlags;
+    private final Map<String, String> valueFlags;
+    private final Map<String, String> allFlags;
     private final SuggestionContext suggestionContext;
     private final Namespace namespace;
 
@@ -50,16 +50,16 @@ public class CommandContext {
         this(args, null);
     }
 
-    public CommandContext(String args, Set<Character> valueFlags) throws CommandException {
+    public CommandContext(String args, Set<String> valueFlags) throws CommandException {
         this(args.split(" ", -1), valueFlags);
     }
 
-    public CommandContext(String args, Set<Character> valueFlags, boolean allowHangingFlag)
+    public CommandContext(String args, Set<String> valueFlags, boolean allowHangingFlag)
             throws CommandException {
         this(args.split(" ", -1), valueFlags, allowHangingFlag, new Namespace());
     }
 
-    public CommandContext(String[] args, Set<Character> valueFlags) throws CommandException {
+    public CommandContext(String[] args, Set<String> valueFlags) throws CommandException {
         this(args, valueFlags, false, null);
     }
 
@@ -74,7 +74,7 @@ public class CommandContext {
      * @param namespace        the locals, null to create empty one
      * @throws CommandException thrown on a parsing error
      */
-    public CommandContext(String[] args, Set<Character> expectedValueFlags, boolean allowHangingFlag, Namespace namespace) throws CommandException {
+    public CommandContext(String[] args, Set<String> expectedValueFlags, boolean allowHangingFlag, Namespace namespace) throws CommandException {
         if (expectedValueFlags == null) {
             expectedValueFlags = Collections.emptySet();
         }
@@ -137,8 +137,8 @@ public class CommandContext {
 
         List<Integer> originalArgIndices = Lists.newArrayListWithCapacity(argIndexList.size());
         List<String> parsedArgs = Lists.newArrayListWithCapacity(argList.size());
-        Map<Character, String> valueFlags = Maps.newHashMap();
-        List<Character> booleanFlags = Lists.newArrayList();
+        Map<String, String> valueFlags = Maps.newHashMap();
+        List<String> booleanFlags = Lists.newArrayList();
 
         for (int nextArg = 0; nextArg < argList.size(); ) {
             // Fetch argument
@@ -146,7 +146,7 @@ public class CommandContext {
             suggestionContext = SuggestionContext.hangingValue();
 
             // Not a flag?
-            if (arg.charAt(0) != '-' || arg.length() == 1 || !arg.matches("^-[a-zA-Z\\?]+$")) {
+            if (arg.charAt(0) != '-' || arg.length() == 1 || !arg.matches("^-[-a-zA-Z\\?]+$")) {
                 if (!isHanging) {
                     suggestionContext = SuggestionContext.lastValue();
                 }
@@ -166,37 +166,33 @@ public class CommandContext {
             }
 
             // Go through the flag characters
-            for (int i = 1; i < arg.length(); ++i) {
-                char flagName = arg.charAt(i);
-
-                if (expectedValueFlags.contains(flagName)) {
-                    if (valueFlags.containsKey(flagName)) {
-                        throw new CommandException("Value flag '" + flagName + "' already given");
-                    }
-
-                    if (nextArg >= argList.size()) {
-                        if (allowHangingFlag) {
-                            suggestionContext = SuggestionContext.flag(flagName);
-                            break;
-                        } else {
-                            throw new CommandException("No value specified for the '-" + flagName + "' flag.");
-                        }
-                    }
-
-                    // If it is a value flag, read another argument and add it
-                    valueFlags.put(flagName, argList.get(nextArg++));
-                    if (!isHanging) {
-                        suggestionContext = SuggestionContext.flag(flagName);
-                    }
-                } else {
-                    booleanFlags.add(flagName);
+            if (expectedValueFlags.contains(arg)) {
+                if (valueFlags.containsKey(arg)) {
+                    throw new CommandException("Value flag '" + arg + "' already given");
                 }
+
+                if (nextArg >= argList.size()) {
+                    if (allowHangingFlag) {
+                        suggestionContext = SuggestionContext.flag(arg);
+                        break;
+                    } else {
+                        throw new CommandException("No value specified for the '-" + arg + "' flag.");
+                    }
+                }
+
+                // If it is a value flag, read another argument and add it
+                valueFlags.put(arg, argList.get(nextArg++));
+                if (!isHanging) {
+                    suggestionContext = SuggestionContext.flag(arg);
+                }
+            } else {
+                booleanFlags.add(arg);
             }
         }
 
-        ImmutableMap.Builder<Character, String> allFlagsBuilder = new ImmutableMap.Builder<Character, String>()
+        ImmutableMap.Builder<String, String> allFlagsBuilder = new ImmutableMap.Builder<String, String>()
                 .putAll(valueFlags);
-        for (Character flag : booleanFlags) {
+        for (String flag : booleanFlags) {
             allFlagsBuilder.put(flag, "true");
         }
 
@@ -293,15 +289,15 @@ public class CommandContext {
         return booleanFlags.contains(ch) || valueFlags.containsKey(ch);
     }
 
-    public Set<Character> getFlags() {
+    public Set<String> getFlags() {
         return booleanFlags;
     }
 
-    public Map<Character, String> getValueFlags() {
+    public Map<String, String> getValueFlags() {
         return valueFlags;
     }
 
-    public Map<Character, String> getFlagsMap() {
+    public Map<String, String> getFlagsMap() {
         return allFlags;
     }
 
@@ -355,7 +351,7 @@ public class CommandContext {
     public static class Builder {
 
         private String[] arguments = new String[0];
-        private Set<Character> expectedValueFlags = ImmutableSet.of();
+        private Set<String> expectedValueFlags = ImmutableSet.of();
         private boolean allowHangingFlag = false;
         private Namespace namespace = new Namespace();
 
@@ -390,11 +386,11 @@ public class CommandContext {
             return this;
         }
 
-        public Set<Character> getExpectedValueFlags() {
+        public Set<String> getExpectedValueFlags() {
             return expectedValueFlags;
         }
 
-        public Builder setExpectedValueFlags(Set<Character> expectedValueFlags) {
+        public Builder setExpectedValueFlags(Set<String> expectedValueFlags) {
             this.expectedValueFlags = ImmutableSet.copyOf(expectedValueFlags);
             return this;
         }

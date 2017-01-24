@@ -93,6 +93,7 @@ public final class ParametricExample {
         executeCommand(namespace, dispatcher, "body setdesc mercury Closest to the Sun"); // Use of @Text on the String parameter
         executeCommand(namespace, dispatcher, "body info mercury");
         executeCommand(namespace, dispatcher, "body info -f mercury"); // Use of a flag (-f)
+        executeCommand(namespace, dispatcher, "body info --fahrenheit mercury");
         executeCommand(namespace, dispatcher, "body settemp earth 59 -f"); // Use of a flag (-f)
         executeCommand(namespace, dispatcher, "body info earth");
         executeCommand(namespace, dispatcher, "body delete earth"); // Permission fail

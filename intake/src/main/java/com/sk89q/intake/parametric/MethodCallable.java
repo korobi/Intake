@@ -21,7 +21,6 @@ package com.sk89q.intake.parametric;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.primitives.Chars;
 import com.sk89q.intake.*;
 import com.sk89q.intake.argument.Namespace;
 import com.sk89q.intake.parametric.handler.InvokeListener;
@@ -101,7 +100,6 @@ final class MethodCallable extends AbstractParametricCallable {
         checkNotNull(definition, "Method lacks a @Command annotation");
 
         boolean ignoreUnusedFlags = definition.anyFlags();
-        Set<Character> unusedFlags = ImmutableSet.copyOf(Chars.asList(definition.flags().toCharArray()));
 
         Annotation[][] annotations = method.getParameterAnnotations();
         Type[] types = method.getGenericParameterTypes();
@@ -134,7 +132,6 @@ final class MethodCallable extends AbstractParametricCallable {
         MethodCallable callable = new MethodCallable(builder, parser, object, method, description, permissions);
         callable.setCommandAnnotations(ImmutableList.copyOf(method.getAnnotations()));
         callable.setIgnoreUnusedFlags(ignoreUnusedFlags);
-        callable.setUnusedFlags(unusedFlags);
         return callable;
     }
 

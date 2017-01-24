@@ -35,10 +35,10 @@ import java.lang.annotation.Target;
 public @interface Switch {
 
     /**
-     * The flag character.
+     * The flag string.
      * 
-     * @return The flag character (A-Z a-z 0-9 is acceptable)
+     * @return The flag string
      */
-    char value();
+    String[] value();
 
 }
