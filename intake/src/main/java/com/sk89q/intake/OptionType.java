@@ -187,7 +187,13 @@ public abstract class OptionType {
 
         @Override
         public CommandArgs transform(CommandArgs arguments) {
-            String v = arguments.getFlags().containsKey(flag) ? "true" : "false";
+            String v = "false";
+            for(String flag : this.flag) {
+                if(arguments.getFlags().containsKey(flag)) {
+                    v = "true";
+                    break;
+                }
+            }
             return Arguments.copyOf(ImmutableList.of(v), arguments.getFlags(), arguments.getNamespace());
         }
     }
